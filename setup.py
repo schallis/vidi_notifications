@@ -1,4 +1,5 @@
 from setuptools import setup
+import os
 
 execfile("vidi_notifications/version.py"),
 

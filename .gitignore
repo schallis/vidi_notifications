@@ -4,7 +4,10 @@
 *~
 *.project
 *.pydevproject
+*.egg-info
 /.coverage
+build/
+dist/
 portal-app.log
 .noseids
 pep8.txt
