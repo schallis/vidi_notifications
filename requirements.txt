@@ -1,0 +1,2 @@
+# Install self (setup.py requirements) too
+-e ./
