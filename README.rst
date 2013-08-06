@@ -6,12 +6,62 @@ vidi_notifications
 :Requirements: See setup.py
 
 
-Running tests
--------------
+Set up notifications in Vidispine
+=================================
+
+POST to /API/notification::
+
+    <NotificationDocument xmlns="http://xml.vidispine.com/schema/vidispine">
+        <action>
+            <http synchronous="false">
+                <retry>3</retry>
+                <contentType>application/json</contentType>
+                <url>http://<app_url>:8000/notify/jobs</url>
+                <method>POST</method>
+                <timeout>5</timeout>
+            </http>
+        </action>
+        <trigger>
+            <job>
+                <update/>
+                <placeholder>false</placeholder>
+            </job>
+        </trigger>
+    </NotificationDocument>
+
+All handler code assumes that the Vidispine has been told to send JSON.
+
+
+Running unit tests
+------------------
 
 ::
 
     $ DJANGO_SETTINGS_MODULE=test_settings nosetests
+
+
+Manually testing
+----------------
+
+You can manually send notifications to the module using a REST client to test
+the signals. The notifications are in a slightly different format to that sent
+by the signal and can be converted using ``utils.to_vidi_format()``.
+
+An example notification to ``/jobs/``::
+
+    {"field": [
+        {"value": "FINISHED", "key": "status"},
+        {"value": "0", "key": "sequenceNumber"},
+        {"value": "2010-08-31T14:01:19.991+02:00", "key": "started"},
+        {"value": "VX-JOB", "key": "jobId"},
+        {"value": "FINISHED", "key": "currentStepStatus"},
+        {"value": "test-user", "key": "user"},
+        {"value": "5", "key": "totalSteps"},
+        {"value": "VX-ITEM", "key": "item"},
+        {"value": "UPDATE", "key": "action"},
+        {"value": "2", "key": "currentStepNumber"},
+        {"value": "UPLOAD", "key": "type"}
+    ]}
 
 
 Signals

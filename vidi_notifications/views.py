@@ -32,7 +32,7 @@ All notifications received that have a known type dispatch corresponding
 Django signals allow arbitrary code to be actioned easily.
 """
 import json
-from collections import defaultdict
+import collections
 import logging
 
 from django.http import HttpResponse
@@ -47,7 +47,7 @@ from .signals import vidispine_upload
 log = logging.getLogger(__name__)
 
 
-signal_map = defaultdict(str, {
+signal_map = collections.defaultdict(str, {
     'UPLOAD': vidispine_upload,
     'RAW_IMPORT': vidispine_upload,
     'PLACEHOLDER_IMPORT': vidispine_upload,
@@ -74,9 +74,9 @@ class JobsView(BaseNotificationView):
         try:
             json_dict = json.loads(raw_data)
             job_data = from_vidi_format(json_dict)
-        except ValueError:
+        except (ValueError, KeyError):
             snippet = raw_data[:20]
-            msg = "Error decoding notification. Notfications must " \
+            msg = "Error interpreting notification. Notfications must " \
                   "be sent as JSON in the format Vidispine provides. " \
                   "Notification began with '{}'".format(snippet)
             log.exception(msg)
@@ -87,6 +87,7 @@ class JobsView(BaseNotificationView):
         signal = signal_map[job_type]
 
         if signal:
+            log.debug('Sending signal for job {}'.format(signal))
             signal.send(sender=self, job=job, request=request)
 
         log.debug("Got job status: {0} {1}".format(job.status, job.jobId))
