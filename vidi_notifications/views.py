@@ -42,7 +42,7 @@ from django.views.decorators.csrf import csrf_exempt
 from ZonzaRest.job import ZJob
 
 from .utils import from_vidi_format
-from .signals import vidispine_upload
+from .signals import vidispine_upload, vidispine_new_version
 
 log = logging.getLogger(__name__)
 
@@ -51,6 +51,7 @@ signal_map = collections.defaultdict(str, {
     'UPLOAD': vidispine_upload,
     'RAW_IMPORT': vidispine_upload,
     'PLACEHOLDER_IMPORT': vidispine_upload,
+    'ESSENCE_VERSION': vidispine_new_version,
 })
 
 
