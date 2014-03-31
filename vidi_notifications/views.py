@@ -42,7 +42,8 @@ from django.views.decorators.csrf import csrf_exempt
 from ZonzaRest.job import ZJob
 
 from .utils import from_vidi_format
-from .signals import vidispine_upload, vidispine_new_version
+from .signals import (vidispine_upload, vidispine_new_version,
+                      vidispine_item_modify)
 
 log = logging.getLogger(__name__)
 
@@ -55,7 +56,27 @@ signal_map = collections.defaultdict(str, {
 })
 
 
+def get_data(request):
+    raw_data = request.raw_post_data
+    json_dict = json.loads(raw_data)
+    return from_vidi_format(json_dict)
+
+def handle_error(request):
+    raw_data = request.raw_post_data
+    snippet = raw_data[:20]
+    msg = "Error interpreting notification. Notfications must " \
+          "be sent as JSON in the format Vidispine provides. " \
+          "Notification began with '{}'".format(snippet)
+    log.exception(msg)
+    return HttpResponse(msg, status=400)
+
+
 class BaseNotificationView(View):
+
+    def get(self, request, *args, **kwargs):
+        """A dummy endpoint that Devops can use to confirm the service is up"""
+        return HttpResponse('The notification service is active. Real ' \
+                            'notifications must use the POST method.')
 
     @csrf_exempt
     def dispatch(self, *args, **kwargs):
@@ -65,23 +86,11 @@ class BaseNotificationView(View):
 class JobsView(BaseNotificationView):
     """Handle /vs/jobs notifications"""
 
-    def get(self, request, *args, **kwargs):
-        """A dummy endpoint that Devops can use to confirm the service is up"""
-        return HttpResponse('The notification service is active. Real ' \
-                            'notifications must use the POST method.')
-
     def post(self, request, *args, **kwargs):
-        raw_data = request.raw_post_data
         try:
-            json_dict = json.loads(raw_data)
-            job_data = from_vidi_format(json_dict)
+            job_data = get_data(request)
         except (ValueError, KeyError):
-            snippet = raw_data[:20]
-            msg = "Error interpreting notification. Notfications must " \
-                  "be sent as JSON in the format Vidispine provides. " \
-                  "Notification began with '{}'".format(snippet)
-            log.exception(msg)
-            return HttpResponse(msg, status=400)
+            return handle_error(request)
 
         job = ZJob(json_dict=job_data)
         job_type = job.type
@@ -101,3 +110,18 @@ class JobsView(BaseNotificationView):
         else:
             log.exception("Unknown job status. {0}".format(job.status))
             return HttpResponse('unknown job', status=400)
+
+
+class ModifyView(BaseNotificationView):
+    """Handle vidispine item modify notifications"""
+
+    def post(self, request, *args, **kwargs):
+        try:
+            modify_data = get_data(request)
+        except (ValueError, KeyError):
+            return handle_error(request)
+
+        item_id = modify_data['itemId']
+        log.debug('Sending signal for item modification')
+        vidispine_item_modify.send(sender=self, vs_item_id=item_id, request=request)
+        return HttpResponse('handled modification signal')
