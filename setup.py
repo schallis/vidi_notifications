@@ -28,6 +28,7 @@ setup(
         'Django==1.5.5',
         'ZonzaRest==0.3.3',
         'hwwutils>=0.0.1',
+        'urlobject==0.5.3',
     ],
     dependency_links=['http://dev-jen1/pypi/'],
 )
