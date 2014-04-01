@@ -43,6 +43,7 @@ from ZonzaRest.job import ZJob
 
 from .utils import from_vidi_format
 from .signals import (vidispine_upload, vidispine_new_version,
+                      vidispine_shape_import,
                       vidispine_item_modify)
 
 log = logging.getLogger(__name__)
@@ -52,6 +53,7 @@ signal_map = collections.defaultdict(str, {
     'UPLOAD': vidispine_upload,
     'RAW_IMPORT': vidispine_upload,
     'PLACEHOLDER_IMPORT': vidispine_upload,
+    'SHAPE_IMPORT': vidispine_shape_import,
     'ESSENCE_VERSION': vidispine_new_version,
 })
 
@@ -60,6 +62,7 @@ def get_data(request):
     raw_data = request.raw_post_data
     json_dict = json.loads(raw_data)
     return from_vidi_format(json_dict)
+
 
 def handle_error(request):
     raw_data = request.raw_post_data

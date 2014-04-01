@@ -1,12 +1,12 @@
 import json
-from mock import Mock, patch
+from mock import Mock, MagicMock, patch
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from ..utils import to_vidi_format
-
+from ..signals import vidispine_shape_import
 
 base_post_data = {
     'item': 'VX-ITEM',
@@ -76,3 +76,19 @@ class TestJobs(TestCase):
         response = self.client.get(reverse('jobs_notify'))
         self.assertEquals(response.status_code, 200)
         self.assertIn('otificat', response.content)
+
+    def test_import_shape(self):
+        post_data = base_post_data.copy()
+        post_data.update({
+            'type': 'SHAPE_IMPORT',
+            'status': 'FINISHED'
+        })
+
+        call_back = MagicMock(spec=lambda _ : True)
+
+        vidispine_shape_import.connect(call_back)
+        data = to_vidi_format(post_data)
+        self.client.post(reverse('jobs_notify'),
+                                    json.dumps(data), "text/json")
+
+        self.assertTrue(call_back.called, 'signal not caught or fired')
