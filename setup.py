@@ -25,8 +25,8 @@ setup(
     packages=get_packages('vidi_notifications'),
     zip_safe=False,
     install_requires=[
-        'Django>=1.4.3',
-        'ZonzaRest>=0.1.1',
+        'Django==1.5.5',
+        'ZonzaRest==0.3.3',
         'hwwutils>=0.0.1',
     ],
     dependency_links=['http://dev-jen1/pypi/'],
