@@ -9,7 +9,7 @@ vidi_notifications
 Set up notifications in Vidispine
 =================================
 
-POST to /API/notification::
+POST the following XML to /API/notification::
 
     <NotificationDocument xmlns="http://xml.vidispine.com/schema/vidispine">
         <action>
@@ -28,6 +28,25 @@ POST to /API/notification::
             </job>
         </trigger>
     </NotificationDocument>
+
+and also this one::
+
+    <NotificationDocument xmlns="http://xml.vidispine.com/schema/vidispine">
+        <action>
+            <http synchronous="false">
+                <retry>3</retry>
+                <contentType>application/json</contentType>
+                <url>http://<app_url>:8000/notify/modify</url>
+                <method>POST</method>
+                <timeout>5</timeout>
+            </http>
+        </action>
+        <trigger>
+            <modify/>
+        </trigger>
+    </NotificationDocument>
+
+
 
 All handler code assumes that the Vidispine has been told to send JSON.
 
@@ -67,12 +86,14 @@ An example notification to ``/jobs/``::
 Signals
 -------
 
-**Warning:** Each signal may be called multiple times so handler code should check for
+**Warning:** Each upload signal may be called multiple times so handler code should check for
 appropriate statuses e.g. FINISHED if needed.
 
-+------------------+-------------------------------------------------------------------+
-| Signal           | Description                                                       |
-+==================+===================================================================+
-| vidispine_upload | Called multiple times to report the status of each import job     |
-|                  | (using any import method)                                         |
-+------------------+-------------------------------------------------------------------+
++-----------------------+-------------------------------------------------------------------+
+| Signal                | Description                                                       |
++=======================+===================================================================+
+| vidispine_upload      | Called multiple times to report the status of each import job     |
+|                       | (using any import method)                                         |
++-----------------------+-------------------------------------------------------------------+
+| vidispine_item_modify | Called when an item's metadata is modified                        |
++-----------------------+-------------------------------------------------------------------+
