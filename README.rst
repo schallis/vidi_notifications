@@ -95,5 +95,7 @@ appropriate statuses e.g. FINISHED if needed.
 | vidispine_upload      | Called multiple times to report the status of each import job     |
 |                       | (using any import method)                                         |
 +-----------------------+-------------------------------------------------------------------+
+| vidispine_shape_import| Called when an shape is imported                                  |
++-----------------------+-------------------------------------------------------------------+
 | vidispine_item_modify | Called when an item's metadata is modified                        |
 +-----------------------+-------------------------------------------------------------------+
