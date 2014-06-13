@@ -99,3 +99,5 @@ appropriate statuses e.g. FINISHED if needed.
 +-----------------------+-------------------------------------------------------------------+
 | vidispine_item_modify | Called when an item's metadata is modified                        |
 +-----------------------+-------------------------------------------------------------------+
+| vidispine_transcode   | Called when transcoding job has ended                             |
++-----------------------+-------------------------------------------------------------------+
