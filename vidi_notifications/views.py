@@ -42,9 +42,13 @@ from django.views.decorators.csrf import csrf_exempt
 from ZonzaRest.job import ZJob
 
 from .utils import from_vidi_format
-from .signals import (vidispine_upload, vidispine_new_version,
-                      vidispine_shape_import,
-                      vidispine_item_modify)
+from .signals import (
+    vidispine_upload,
+    vidispine_new_version,
+    vidispine_shape_import,
+    vidispine_item_modify,
+    vidispine_transcode,
+)
 
 log = logging.getLogger(__name__)
 
@@ -55,6 +59,7 @@ signal_map = collections.defaultdict(str, {
     'PLACEHOLDER_IMPORT': vidispine_upload,
     'SHAPE_IMPORT': vidispine_shape_import,
     'ESSENCE_VERSION': vidispine_new_version,
+    'TRANSCODE': vidispine_transcode,
 })
 
 
