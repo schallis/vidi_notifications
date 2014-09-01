@@ -20,15 +20,16 @@ setup(
     license='Proprietary',
     description="A Django application for handling Vidispine callbacks and "
                 "raising signals",
-    author='Hogarth',
-    author_email='steven.challis@hogarthww.com',
+    author='Hogarth Worldwide',
+    author_email='tsd@hogarthww.com',
     packages=get_packages('vidi_notifications'),
     zip_safe=False,
     install_requires=[
         'Django==1.5.5',
         'ZonzaRest==0.3.3',
         'hwwutils==0.0.2',
-        'urlobject==0.5.3',
+        'hacked-urlobject==0.5.3',
+        'mock==1.0.1',
     ],
-    dependency_links=['http://dev-jen1/pypi/'],
+    dependency_links=['http://pypi-zadar.hogarthww.prv/hogarthww/prod/'],
 )

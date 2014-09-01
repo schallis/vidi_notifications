@@ -1,2 +1,7 @@
-# Install self (setup.py requirements) too
--e ./
+-i http://pypi-zadar.hogarthww.prv/hogarthww/prod/
+
+Django==1.5.5
+ZonzaRest==0.3.3
+hwwutils==0.0.2
+hacked-urlobject==0.5.3
+mock==1.0.1
