@@ -83,7 +83,7 @@ class BaseNotificationView(View):
 
     def get(self, request, *args, **kwargs):
         """A dummy endpoint that Devops can use to confirm the service is up"""
-        return HttpResponse('The notification service is active. Real ' \
+        return HttpResponse('The notification service is active. Real '
                             'notifications must use the POST method.')
 
     @csrf_exempt
@@ -131,5 +131,6 @@ class ModifyView(BaseNotificationView):
 
         item_id = modify_data['itemId']
         log.debug('Sending signal for item modification')
-        vidispine_item_modify.send(sender=self, vs_item_id=item_id, request=request)
+        vidispine_item_modify.send(
+            sender=self, vs_item_id=item_id, request=request)
         return HttpResponse('handled modification signal')

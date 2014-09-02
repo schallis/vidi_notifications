@@ -1,18 +1,46 @@
-*.pyc
-.*.swp
-.*.swo
-*~
-*.project
-*.pydevproject
-*.egg-info
-/.coverage
-build/
-dist/
-portal-app.log
-.noseids
-pep8.txt
-pylint.txt
-nosetests.xml
-coverage.xml
+*.py[cod]
+.DS_Store
 
-test.db
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+htmlcov
+.noseids
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Complexity
+output/*.html
+output/*/index.html
+
+# Sphinx
+docs/_build
+zonza-scripts-*
