@@ -1,12 +1,11 @@
 import json
-from mock import Mock, MagicMock, patch
+from mock import MagicMock
 
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from ..utils import to_vidi_format
-from ..signals import vidispine_shape_import
+from vidi_notifications.utils import to_vidi_format
+from vidi_notifications.signals import vidispine_shape_import
 
 base_post_data = {
     'item': 'VX-ITEM',
@@ -84,11 +83,11 @@ class TestJobs(TestCase):
             'status': 'FINISHED'
         })
 
-        call_back = MagicMock(spec=lambda _ : True)
+        call_back = MagicMock(spec=lambda _: True)
 
         vidispine_shape_import.connect(call_back)
         data = to_vidi_format(post_data)
         self.client.post(reverse('jobs_notify'),
-                                    json.dumps(data), "text/json")
+                         json.dumps(data), "text/json")
 
         self.assertTrue(call_back.called, 'signal not caught or fired')

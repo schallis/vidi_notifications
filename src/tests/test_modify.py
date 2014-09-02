@@ -1,12 +1,10 @@
 import json
-from mock import MagicMock
 
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from ..utils import to_vidi_format
-from ..signals import vidispine_item_modify
+from vidi_notifications.utils import to_vidi_format
+from vidi_notifications.signals import vidispine_item_modify
 
 
 class TestJobs(TestCase):
