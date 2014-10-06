@@ -64,18 +64,16 @@ signal_map = collections.defaultdict(str, {
 
 
 def get_data(request):
-    raw_data = request.raw_post_data
-    json_dict = json.loads(raw_data)
-    return from_vidi_format(json_dict)
+    return from_vidi_format(json.loads(request.body))
 
 
 def handle_error(request):
-    raw_data = request.raw_post_data
-    snippet = raw_data[:20]
-    msg = "Error interpreting notification. Notfications must " \
-          "be sent as JSON in the format Vidispine provides. " \
-          "Notification began with '{}'".format(snippet)
-    log.exception(msg)
+    msg = (
+        "Error interpreting notification. Notfications must "
+        "be sent as JSON in the format Vidispine provides. "
+        "Notification began with '%s'"
+    )
+    log.exception(msg, request.body[:20])
     return HttpResponse(msg, status=400)
 
 

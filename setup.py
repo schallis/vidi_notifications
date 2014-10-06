@@ -14,7 +14,7 @@ setup(
     author_email='tsd@hogarthww.com',
     zip_safe=True,
     install_requires=[
-        'django>=1.5.5, <1.6.0',
+        'django>=1.5.5, <1.7.0',
         'zonzarest==0.5.0',
         'hwwutils==0.0.2',
     ],
