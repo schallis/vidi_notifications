@@ -15,3 +15,21 @@ def to_vidi_format(orig_dict):
             'value': value,
         })
     return new_dict
+
+
+class JobObject(object):
+    """
+        Provides direct dictionary style item access to the wrapped json
+    """
+
+    def __init__(self, data):
+        self.data = data
+
+    def __getattr__(self, item):
+        return self.data[item]
+
+    def __getitem__(self, item):
+        return self.data[item]
+
+    def __contains__(self, item):
+        return item in self.data.keys()

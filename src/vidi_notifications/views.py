@@ -32,35 +32,16 @@ All notifications received that have a known type dispatch corresponding
 Django signals allow arbitrary code to be actioned easily.
 """
 import json
-import collections
 import logging
 
 from django.http import HttpResponse
-from django.views.generic.base import View
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.base import View
 
-from ZonzaRest.job import ZJob
-
+from .tasks import job_view_task, modify_view_task
 from .utils import from_vidi_format
-from .signals import (
-    vidispine_upload,
-    vidispine_new_version,
-    vidispine_shape_import,
-    vidispine_item_modify,
-    vidispine_transcode,
-)
 
 log = logging.getLogger(__name__)
-
-
-signal_map = collections.defaultdict(str, {
-    'UPLOAD': vidispine_upload,
-    'RAW_IMPORT': vidispine_upload,
-    'PLACEHOLDER_IMPORT': vidispine_upload,
-    'SHAPE_IMPORT': vidispine_shape_import,
-    'ESSENCE_VERSION': vidispine_new_version,
-    'TRANSCODE': vidispine_transcode,
-})
 
 
 def get_data(request):
@@ -98,23 +79,20 @@ class JobsView(BaseNotificationView):
         except (ValueError, KeyError):
             return handle_error(request)
 
-        job = ZJob(json_dict=job_data)
-        job_type = job.type
-        signal = signal_map[job_type]
+        job_view_task.delay(job_data)
 
-        if signal:
-            log.debug('Sending signal for job {}'.format(signal))
-            signal.send(sender=self, job=job, request=request)
+        job_status = job_data['status']
+        job_id = job_data['jobId']
 
-        log.debug("Got job status: {0} {1}".format(job.status, job.jobId))
-        if job.status in ["FINISHED", "FINISHED_WARNING"]:
+        log.debug("Got job status: {0} {1}".format(job_status, job_id))
+        if job_status in ["FINISHED", "FINISHED_WARNING"]:
             return HttpResponse('got finished job')
-        elif job.status in ["FAILED_TOTAL", "ABORTED"]:
+        elif job_status in ["FAILED_TOTAL", "ABORTED"]:
             return HttpResponse('got failed job')
-        elif job.status in ["STARTED", "READY"]:
+        elif job_status in ["STARTED", "READY"]:
             return HttpResponse('got started job')
         else:
-            log.exception("Unknown job status. {0}".format(job.status))
+            log.exception("Unknown job status. {0}".format(job_status))
             return HttpResponse('unknown job', status=400)
 
 
@@ -127,8 +105,6 @@ class ModifyView(BaseNotificationView):
         except (ValueError, KeyError):
             return handle_error(request)
 
-        item_id = modify_data['itemId']
-        log.debug('Sending signal for item modification')
-        vidispine_item_modify.send(
-            sender=self, vs_item_id=item_id, request=request)
+        modify_view_task.delay(modify_data)
+
         return HttpResponse('handled modification signal')

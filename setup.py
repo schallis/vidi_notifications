@@ -15,7 +15,8 @@ setup(
     zip_safe=True,
     install_requires=[
         'django>=1.5.5, <1.7.0',
-        'zonzarest==0.5.0',
+        'celery==3.1.12',
+        'django-celery==3.1.10',
         'hwwutils==0.0.2',
     ],
 )
