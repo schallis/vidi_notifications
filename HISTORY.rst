@@ -4,10 +4,10 @@ History
 -------
 
 
-1.0.1 (unreleased)
+2.0.0 (2014-12-15)
 ++++++++++++++++++
 
-- Nothing changed yet.
+- Switching the tasks to push messages to Celery Queues
 
 
 1.0.0 (2014-10-06)
