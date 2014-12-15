@@ -51,6 +51,20 @@ and also this one::
 All handler code assumes that the Vidispine has been told to send JSON.
 
 
+Extra Settings in Django
+========================
+If you need to set any of the settings (attributes) you'd normally be
+able to set on a Celery Task class had you written it yourself,
+you may specify them in a dict in the CELERY_VIDI_NOTIFICATION_CONFIG setting:
+
+::
+
+    CELERY_VIDI_NOTIFICATION_CONFIG = {
+        'queue' : 'notifications',
+        ...
+    }
+
+
 Running unit tests
 ------------------
 
