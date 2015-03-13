@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -141,3 +142,20 @@ class TestJobs(TestCase):
         with mock_signal_receiver(vidispine_shape_import) as receiver:
             job_view_task.delay(post_data)
             self.assertEqual(1, receiver.call_count)
+
+    def test_notification_callback_without_celery(self):
+        settings.USE_CELERY_FOR_NOTIFICATIONS = False
+
+        post_data = self.base_post_data.copy()
+        post_data.update({
+            'currentStepStatus': 'STARTED',
+            'status': 'STARTED'
+        })
+        data = to_vidi_format(post_data)
+        response = self.client.post(
+            reverse('jobs_notify'),
+            json.dumps(data),
+            content_type="text/json"
+        )
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.content, 'got started job')

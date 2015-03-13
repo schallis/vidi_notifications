@@ -34,6 +34,7 @@ Django signals allow arbitrary code to be actioned easily.
 import json
 import logging
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View
@@ -79,7 +80,13 @@ class JobsView(BaseNotificationView):
         except (ValueError, KeyError):
             return handle_error(request)
 
-        job_view_task.delay(job_data)
+        if hasattr(
+            settings,
+            'USE_CELERY_FOR_NOTIFICATIONS'
+        ) and not settings.USE_CELERY_FOR_NOTIFICATIONS:
+            job_view_task(job_data)
+        else:
+            job_view_task.delay(job_data)
 
         job_status = job_data['status']
         job_id = job_data['jobId']
