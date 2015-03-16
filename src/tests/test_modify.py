@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -19,6 +20,25 @@ class TestJobs(TestCase):
             'broadcast_ready': 'True'
         }
         self.vidispine_payload = to_vidi_format(self.payload)
+
+    def tearDown(self):
+        if hasattr(settings, 'USE_CELERY_FOR_NOTIFICATIONS'):
+            del settings.USE_CELERY_FOR_NOTIFICATIONS
+
+    @patch('vidi_notifications.views.modify_view_task')
+    def test_started_no_celery(self, modify_view_task):
+        settings.USE_CELERY_FOR_NOTIFICATIONS = False
+
+        response = self.client.post(
+            reverse('modify_notify'),
+            json.dumps(self.vidispine_payload),
+            content_type="text/json"
+        )
+
+        modify_view_task.assert_called_once_with(self.payload)
+
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.content, 'handled modification signal')
 
     @patch('vidi_notifications.views.modify_view_task')
     def test_started(self, modify_view_task):
