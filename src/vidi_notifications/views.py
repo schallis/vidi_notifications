@@ -112,6 +112,12 @@ class ModifyView(BaseNotificationView):
         except (ValueError, KeyError):
             return handle_error(request)
 
-        modify_view_task.delay(modify_data)
+        if hasattr(
+            settings,
+            'USE_CELERY_FOR_NOTIFICATIONS'
+        ) and not settings.USE_CELERY_FOR_NOTIFICATIONS:
+            modify_view_task(modify_data)
+        else:
+            modify_view_task.delay(modify_data)
 
         return HttpResponse('handled modification signal')
