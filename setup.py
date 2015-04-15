@@ -14,9 +14,9 @@ setup(
     author_email='tsd@hogarthww.com',
     zip_safe=True,
     install_requires=[
-        'django>=1.5.5, <1.7.0',
-        'celery==3.1.12',
-        'django-celery==3.1.10',
+        'django>=1.5.5, <1.8.99',
+        'celery>=3.1.12, <4.0.0',
+        'django-celery>=3.1.10, <4.0.0',
         'hwwutils==0.0.2',
     ],
 )
