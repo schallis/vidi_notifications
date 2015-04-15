@@ -1,4 +1,4 @@
-.. :changelog:
+- Add support for Django 1.7 and 1.8... :changelog:
 
 History
 -------
@@ -7,7 +7,7 @@ History
 2.1.1 (unreleased)
 ++++++++++++++++++
 
-- Nothing changed yet.
+- Add support for Django 1.7 and 1.8.
 
 
 2.1.0 (2015-03-31)
