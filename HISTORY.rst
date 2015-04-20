@@ -4,7 +4,7 @@ History
 -------
 
 
-2.1.1 (unreleased)
+2.2.0 (2015-04-20)
 ++++++++++++++++++
 
 - Add support for Django 1.7 and 1.8.
