@@ -58,6 +58,7 @@ class TestJobs(TestCase):
             modify_view_task.delay(self.payload)
 
             receiver.assert_called_once_with(
+                full_data=self.payload,
                 signal=ANY,
                 vs_item_id='VX-ITEM',
                 sender=ANY
