@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="vidi-notifications",
-    version='3.0.0',
+    version='3.0.1.dev0',
     packages=find_packages('src', exclude=('tests',)),
     package_dir={'': 'src'},
     include_package_data=True,
