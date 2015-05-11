@@ -4,7 +4,7 @@ History
 -------
 
 
-2.2.1 (unreleased)
+3.0.0 (2015-05-11)
 ++++++++++++++++++
 
 - Added full_data parameter to vidispine_item_modify signal
