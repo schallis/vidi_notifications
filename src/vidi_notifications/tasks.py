@@ -51,5 +51,6 @@ def modify_view_task(modify_data):
 
     vidispine_item_modify.send(
         sender=modify_view_task.__name__,
-        vs_item_id=modify_data['itemId']
+        vs_item_id=modify_data['itemId'],
+        full_data=modify_data
     )
