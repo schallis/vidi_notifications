@@ -10,7 +10,8 @@ from .signals import (
     vidispine_new_version,
     vidispine_shape_import,
     vidispine_transcode,
-    vidispine_upload
+    vidispine_upload,
+    vidispine_copy_file,
 )
 from .utils import JobObject
 
@@ -23,6 +24,7 @@ TASK_CONFIG.update(CONFIG)
 if 'name' in TASK_CONFIG:
     del TASK_CONFIG['name']
 
+
 signal_map = collections.defaultdict(str, {
     'UPLOAD': vidispine_upload,
     'RAW_IMPORT': vidispine_upload,
@@ -30,7 +32,9 @@ signal_map = collections.defaultdict(str, {
     'SHAPE_IMPORT': vidispine_shape_import,
     'ESSENCE_VERSION': vidispine_new_version,
     'TRANSCODE': vidispine_transcode,
+    'COPY_FILE': vidispine_copy_file,
 })
+
 
 log = logging.getLogger(__name__)
 

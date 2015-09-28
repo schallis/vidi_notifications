@@ -8,3 +8,4 @@ vidispine_item_modify = UniqueSignal(
     providing_args=["full_data", "vs_item_id"]
 )
 vidispine_transcode = UniqueSignal(providing_args=["job"])
+vidispine_copy_file = UniqueSignal(providing_args=["job"])
